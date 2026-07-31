@@ -102,3 +102,11 @@ def mpesa_callback():
         print(f"Payment failed: {callback.get('ResultDesc')}")
 
     return jsonify({"ResultCode": 0, "ResultDesc": "Accepted"}), 200
+
+    
+@order_bp.route('', methods=['GET'])
+@jwt_required()
+def list_orders():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+   
