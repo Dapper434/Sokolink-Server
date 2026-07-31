@@ -34,4 +34,13 @@ def initiate_stk_push(phone_number, amount, order_id):
         simulate_mpesa_callback(order_id, phone_number)
         return {"ResponseCode": "0", "CustomerMessage": "Simulation: Payment prompt sent"}    
 
+    timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+    password = base64.b64encode((SHORTCODE + PASSKEY + timestamp).encode()).decode()
+
+    auth_url = "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
+    auth_res = requests.get(auth_url, auth=(CONSUMER_KEY, CONSUMER_SECRET))
+    if auth_res.status_code != 200:
+        raise Exception(f"Failed to get M-Pesa access token: {auth_res.text}")
+
+
 
