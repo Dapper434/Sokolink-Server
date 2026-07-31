@@ -88,3 +88,17 @@ def create_order():
 @order_bp.route('/mpesa-callback', methods=['POST'])
 def mpesa_callback():
     # Safaricom calls this after the user pays on their phone
+    data = request.get_json()
+    if not data:
+        return jsonify({"ResultCode": 1, "ResultDesc": "Invalid payload"}), 400
+
+    callback = data.get("Body", {}).get("stkCallback", {})
+    if callback.get("ResultCode") == 0:
+        items = callback.get("CallbackMetadata", {}).get("Item", [])
+        receipt = next((i["Value"] for i in items if i["Name"] == "MpesaReceiptNumber"), None)
+        phone = next((i["Value"] for i in items if i["Name"] == "PhoneNumber"), None)
+        print(f"Payment successful: {receipt} by {phone}")
+    else:
+        print(f"Payment failed: {callback.get('ResultDesc')}")
+
+    return jsonify({"ResultCode": 0, "ResultDesc": "Accepted"}), 200
