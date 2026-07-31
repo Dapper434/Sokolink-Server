@@ -84,3 +84,7 @@ def create_order():
         "status": order.status,
         "message": "Order created and payment prompt sent to your phone."
     }), 201 
+
+@order_bp.route('/mpesa-callback', methods=['POST'])
+def mpesa_callback():
+    # Safaricom calls this after the user pays on their phone
