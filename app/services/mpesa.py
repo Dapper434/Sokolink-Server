@@ -29,4 +29,9 @@ def simulate_mpesa_callback(order_id, phone_number):
 
     threading.Thread(target=task).start()
 
+def initiate_stk_push(phone_number, amount, order_id):
+    if CONSUMER_KEY == 'mock_consumer_key':
+        simulate_mpesa_callback(order_id, phone_number)
+        return {"ResponseCode": "0", "CustomerMessage": "Simulation: Payment prompt sent"}    
+
 
