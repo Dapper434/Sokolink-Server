@@ -57,6 +57,12 @@ def update_listing(id):
     user_id = get_jwt_identity()
     listing = Listing.query.get_or_404(id)   
 
+    if str(listing.farmer_id) != str(user_id):
+        return jsonify({"message": "Unauthorized"})
+
+
+    
+
 
 
 
