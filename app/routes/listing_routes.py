@@ -20,3 +20,8 @@ def listing_json(listing):
 def get_listings():
     listings = Listing.query.all()
     return jsonify([listing_json(l) for l in listings]), 200    
+
+
+@listing_bp.route('/<int:id>', methods=['GET'])
+def get_listing(id):
+    return jsonify(listing_json(Listing.query.get_or_404(id))), 200
