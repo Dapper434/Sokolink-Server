@@ -10,3 +10,6 @@ auth_bp = Blueprint('auth', __name__)
 @auth_bp.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
+
+    if User.query.filter_by(email=data.get('email')).first():
+        return jsonify({"message": "Email already registered"}), 400
