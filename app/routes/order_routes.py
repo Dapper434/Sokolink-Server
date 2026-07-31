@@ -127,3 +127,13 @@ def list_orders():
 def update_order_status(id):
     user_id = get_jwt_identity()
     order = Order.query.get_or_404(id)   
+
+    owns_crop = any(str(item.listing.farmer_id) == str(user_id) for item in order.items)
+    if not owns_crop:
+        return jsonify({"message": "Only the farmer can update this order status"}), 403
+
+    data = request.get_json()
+    if "status" in data:
+        order.status = data["status"]
+    db.session.commit()
+    return jsonify({"message": "Order status updated successfully"}), 200
