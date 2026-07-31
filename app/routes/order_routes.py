@@ -31,3 +31,14 @@ def order_json(order):
 def create_order():
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
+    if user.role != 'buyer':
+        return jsonify({"message": "Only buyers can place orders"}), 403
+
+    
+    data = request.get_json()
+    if not data or "items" not in data or not isinstance(data["items"], list):
+        return jsonify({"message": "Invalid payload"}), 400
+
+    phone_number = data.get("phone_number")
+    if not phone_number:
+        return jsonify({"message": "Phone number is required for payment"}), 400    
