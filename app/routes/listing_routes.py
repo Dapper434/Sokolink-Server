@@ -74,6 +74,13 @@ def update_listing(id):
 def delete_listing(id):
     user_id = get_jwt_identity()
     listing = Listing.query.get_or_404(id)    
+
+    if str(listing.farmer_id) != str(user_id):
+        return jsonify({"message": "Unauthorized"}), 403
+
+    db.session.delete(listing)
+    db.session.commit()
+    return jsonify({"message": "Listing deleted successfully"}), 200
     
 
 
