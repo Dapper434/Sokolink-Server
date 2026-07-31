@@ -42,5 +42,8 @@ def initiate_stk_push(phone_number, amount, order_id):
     if auth_res.status_code != 200:
         raise Exception(f"Failed to get M-Pesa access token: {auth_res.text}")
 
+    token = auth_res.json().get('access_token')
+    push_url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
+    headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
 
 
