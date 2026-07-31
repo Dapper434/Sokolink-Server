@@ -109,4 +109,14 @@ def mpesa_callback():
 def list_orders():
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
+
+    if user.role == 'buyer':
+        orders = Order.query.filter_by(buyer_id=user_id).order_by(Order.order_date.desc()).all()
+    else:
+        orders = Order.query.join(OrderItem).join(Listing).filter(
+            Listing.farmer_id == user_id
+        ).order_by(Order.order_date.desc()).all()
+        orders = sorted(set(orders), key=lambda o: o.order_date, reverse=True)
+
+    return jsonify([order_json(o) for o in orders]), 200
    
