@@ -45,5 +45,25 @@ def initiate_stk_push(phone_number, amount, order_id):
     token = auth_res.json().get('access_token')
     push_url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
     headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+    payload = {
+        "BusinessShortCode": SHORTCODE,
+        "Password": password,
+        "Timestamp": timestamp,
+        "TransactionType": "CustomerPayBillOnline",
+        "Amount": int(amount),
+        "PartyA": phone_number,
+        "PartyB": SHORTCODE,
+        "PhoneNumber": phone_number,
+        "CallBackURL": CALLBACK_URL,
+        "AccountReference": f"Order {order_id}",
+        "TransactionDesc": "SokoLink Payment"
+    }
+
+    push_res = requests.post(push_url, json=payload, headers=headers)
+    if push_res.status_code == 200:
+        simulate_mpesa_callback(order_id, phone_number)
+
+    return push_res.json()
+
 
 
