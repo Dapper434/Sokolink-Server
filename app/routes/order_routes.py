@@ -69,4 +69,18 @@ def create_order():
         ))
 
     order.total_amount = total_amount
-    db.session.commit()    
+    db.session.commit()   
+
+    try:
+        mpesa_res = initiate_stk_push(phone_number, total_amount, order.id)
+        if mpesa_res.get('ResponseCode') != '0':
+            return jsonify({"message": "STK Push failed", "details": mpesa_res}), 500
+    except Exception as e:
+        return jsonify({"message": "Failed to initiate payment", "error": str(e)}), 500
+
+    return jsonify({
+        "id": order.id,
+        "total_amount": total_amount,
+        "status": order.status,
+        "message": "Order created and payment prompt sent to your phone."
+    }), 201 
