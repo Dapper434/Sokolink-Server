@@ -31,4 +31,6 @@ def get_listing(id):
 @jwt_required()
 def create_listing():
     user_id = get_jwt_identity()
-    user = User.query.get(user_id)    
+    user = User.query.get(user_id)
+    if user.role != 'farmer':
+        return jsonify({"message": "Only farmers can create listings"}), 403    
