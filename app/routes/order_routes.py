@@ -26,3 +26,8 @@ def order_json(order):
         } for item in order.items]
     }
 
+@order_bp.route('', methods=['POST'])
+@jwt_required()
+def create_order():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
