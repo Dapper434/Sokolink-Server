@@ -42,3 +42,31 @@ def create_order():
     phone_number = data.get("phone_number")
     if not phone_number:
         return jsonify({"message": "Phone number is required for payment"}), 400    
+
+    order = Order(buyer_id=user_id, status='pending', phone_number=phone_number)
+    db.session.add(order)
+    db.session.flush()
+
+    total_amount = 0
+    for item in data["items"]:
+        listing = Listing.query.get(item["listing_id"])
+        if not listing:
+            db.session.rollback()
+            return jsonify({"message": f"Listing {item['listing_id']} not found"}), 404
+        if listing.quantity_kg < item["quantity_kg"]:
+            db.session.rollback()
+            return jsonify({"message": f"Insufficient quantity for {listing.crop_name}"}), 400
+
+        listing.quantity_kg -= item["quantity_kg"]
+        qty = item["quantity_kg"]
+        total_amount += listing.price_per_kg * qty
+
+        db.session.add(OrderItem(
+            order_id=order.id,
+            listing_id=listing.id,
+            quantity_kg=qty,
+            price_at_order=listing.price_per_kg
+        ))
+
+    order.total_amount = total_amount
+    db.session.commit()    
