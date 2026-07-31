@@ -45,7 +45,19 @@ def create_listing():
         crop_name=data["crop_name"],
         quantity_kg=data["quantity_kg"],
         price_per_kg=data["price_per_kg"]    
-    )   
+    )
+    db.session.add(listing)
+    db.session.commit()
+    return jsonify(listing_json(listing)), 201
+
+
+@listing_bp.route('/<int:id>', methods=['PUT'])
+@jwt_required()
+def update_listing(id):
+    user_id = get_jwt_identity()
+    listing = Listing.query.get_or_404(id)   
+
+
 
 
 
