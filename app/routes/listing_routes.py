@@ -15,3 +15,8 @@ def listing_json(listing):
         "quantity_kg": listing.quantity_kg,
         "price_per_kg": listing.price_per_kg
     }
+
+@listing_bp.route('', methods=['GET'])
+def get_listings():
+    listings = Listing.query.all()
+    return jsonify([listing_json(l) for l in listings]), 200    
