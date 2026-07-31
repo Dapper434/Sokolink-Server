@@ -25,3 +25,10 @@ def get_listings():
 @listing_bp.route('/<int:id>', methods=['GET'])
 def get_listing(id):
     return jsonify(listing_json(Listing.query.get_or_404(id))), 200
+
+
+@listing_bp.route('', methods=['POST'])
+@jwt_required()
+def create_listing():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)    
