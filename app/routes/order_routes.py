@@ -120,3 +120,10 @@ def list_orders():
 
     return jsonify([order_json(o) for o in orders]), 200
    
+
+
+@order_bp.route('/<int:id>/status', methods=['PUT'])
+@jwt_required()
+def update_order_status(id):
+    user_id = get_jwt_identity()
+    order = Order.query.get_or_404(id)   
