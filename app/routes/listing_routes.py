@@ -33,4 +33,22 @@ def create_listing():
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
     if user.role != 'farmer':
-        return jsonify({"message": "Only farmers can create listings"}), 403    
+        return jsonify({"message": "Only farmers can create listings"}), 403 
+
+     
+    data = request.get_json()
+    if not data or not all(k in data for k in ("crop_name", "quantity_kg", "price_per_kg")):
+        return jsonify({"message": "Missing required fields"}), 400    
+
+    listing = Listing(
+        farmer_id=user_id,
+        crop_name=data["crop_name"],
+        quantity_kg=data["quantity_kg"],
+        price_per_kg=data["price_per_kg"]    
+    )   
+
+
+
+
+
+
