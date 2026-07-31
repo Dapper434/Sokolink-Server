@@ -60,6 +60,16 @@ def update_listing(id):
     if str(listing.farmer_id) != str(user_id):
         return jsonify({"message": "Unauthorized"})
 
+    data = request.get_json()
+    if "quantity_kg" in data:
+        listing.quantity_kg = data["quantity_kg"]
+    if "price_per_kg" in data:
+        listing.price_per_kg = data["price_per_kg"]
+
+    db.session.commit()
+    return jsonify({"message": "Listing updated successfully"}), 200
+    
+
 
     
 
