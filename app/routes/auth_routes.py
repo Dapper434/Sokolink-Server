@@ -24,3 +24,12 @@ def register():
     db.session.add(user)
     db.session.commit()
     return jsonify({"message": "User registered successfully"}), 201
+
+
+
+@auth_bp.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    user = User.query.filter_by(email=data.get('email')).first()
+
+
