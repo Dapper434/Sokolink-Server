@@ -22,6 +22,10 @@ def create_app():
     app.register_blueprint(listing_bp, url_prefix='/api/listings')
     app.register_blueprint(order_bp, url_prefix='/api/orders')
 
+    @app.get("/api/health")
+    def health():
+        return {"status": "ok"}, 200
+
     # Create tables if they don't exist
     with app.app_context():
         from app.models import user, listing, order, order_item  # noqa: F811
