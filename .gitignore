@@ -1,1 +1,33 @@
- 
+# Secrets and environment
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+venv/
+.venv/
+env/
+
+# Databases and leftovers
+*.db
+*.db-*
+*.db.*
+*.sqlite
+*.sqlite3
+*.stale-bak*
+
+# Node / frontend build
+node_modules/
+dist/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
